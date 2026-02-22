@@ -100,3 +100,10 @@ erDiagram
         int product_id FK
         int image_id FK
     }
+    TESTIMONY{
+        int id PK
+        string user_id FK
+        desimal reting
+        string message 
+    }
+```
