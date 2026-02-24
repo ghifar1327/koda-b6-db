@@ -4,40 +4,45 @@
 erDiagram
 
 
-
-
-    USERS ||--o{ TRANSACTIONS : makes
-    USERS {
+    USER ||--O{ CART : has
+    USER ||--o{ TRANSACTIONS : makes
+    USER {
         string id pk 
-         string name
-         string  email
-         string password
-         string phone
-         string addres 
-         string role
-         timestamp create_at
-         timestamp update_at
+        string full_name
+        string picture
+        string  email
+        string password
+        string phone
+        string addres 
+        string role
+        timestamp create_at
+        timestamp update_at
     }
 
-    TRANSACTIONS ||--o{ ORDER_DETAILS : contains
+    CART ||--O{ PRODUCTS : keep
+    CART{
+        int user_id FK
+        int product_id Fk
+        int quantity
+
+    }
+
+    TRANSACTIONS ||--o{ TRANSACTIONS_PRODUCTS : contains
     TRANSACTIONS ||--o{ ORDER_HISTORY : has
     TRANSACTIONS {
         int id PK
         int user_id FK
-        int total_price
         string status
         string payment_method
         timestamp created_at
     }
 
-    ORDER_DETAILS {
+    TRANSACTIONS_PRODUCTS {
         int id PK
         int transaction_id FK
         int product_id FK
-        string size
+        int size_id Fk
         int quantity
-        int price
-        int subtotal
     }
 
     ORDER_HISTORY {
@@ -47,30 +52,33 @@ erDiagram
         timestamp changed_at
     }
 
+    PRODUCTS ||--O{ PRODUCTS_CATEGORIES : has
+    PRODUCTS ||--O{ TESTIMONY : has
+    PRODUCTS ||--o{ PRODUCT_VARIANT : has
     PRODUCTS ||--o{ PRODUCT_SIZES : has
-    PRODUCTS ||--o{ ORDER_DETAILS : ordered
+    PRODUCTS ||--o{ TRANSACTIONS_PRODUCTS : ordered
     PRODUCTS ||--o{ PRODUCT_IMAGES : has
     PRODUCTS ||--o{ PRODUCT_METHODS : available_in
     PRODUCTS {
         int id pk
         string name
-        string catagory
         string description
-        decimal rating
         int price
-        decimal discount_persent
-        int seles
         int stock
         timestapm create_at
         timestapm update_at
     }
 
-    CATEGORIES ||--o{ PRODUCTS : has
+    CATEGORIES ||--o{ PRODUCTS_CATEGORIES : has
     CATEGORIES {
         int id PK
         string name
     }
-    
+    PRODUCTS_CATEGORIES{
+        int product_id FK
+        int catagory_id FK
+    }
+
     METHODS  ||--o{ PRODUCT_METHODS : used_in
     METHODS {
         int id PK
@@ -85,10 +93,22 @@ erDiagram
     SIZES {
         int id PK
         string name 
+        int add_price
     }
     PRODUCT_SIZES{
         int product_id FK
         int size_id FK
+    }
+
+    VARIANT ||--O{ PRODUCT_VARIANT : available_in
+    VARIANT {
+        int id PK
+        string name
+        int add_price
+    }
+    PRODUCT_VARIANT{
+        int product_id FK
+        int variant_id FK
     }
 
     IMAGES ||--o{ PRODUCT_IMAGES : available_in
@@ -103,7 +123,19 @@ erDiagram
     TESTIMONY{
         int id PK
         string user_id FK
+        int id_product FK
         desimal reting
         string message 
+    }
+
+    DISCOUNT ||--O{ PRODUCTS : available
+    DISCOUNT {
+        int id PK
+        int product_id FK
+        decimal discount_persent
+        string description
+        boolean is_Flash_sale
+        date start_date
+        date end_date
     }
 ```
