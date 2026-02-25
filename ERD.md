@@ -23,6 +23,8 @@ erDiagram
     CART{
         int user_id FK
         int product_id Fk
+        int size_id FK
+        int variant_id FK
         int quantity
 
     }
@@ -89,6 +91,7 @@ erDiagram
         int method_id FK
     }
 
+    SIZES ||--o{ CART : has
     SIZES ||--o{ PRODUCT_SIZES : avaliable_at
     SIZES {
         int id PK
@@ -100,6 +103,7 @@ erDiagram
         int size_id FK
     }
 
+    VARIANT ||--o{ CART : has
     VARIANT ||--O{ PRODUCT_VARIANT : available_in
     VARIANT {
         int id PK

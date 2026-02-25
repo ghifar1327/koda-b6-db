@@ -22,13 +22,6 @@ CREATE TABLE products (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- =============================================================================== CART
-CREATE TABLE cart (
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    PRIMARY KEY (user_id, product_id)
-);
 
 -- ============================================================================= TRANSACTIONS
 CREATE TABLE transactions (
@@ -137,6 +130,15 @@ CREATE TABLE discount (
     is_flash_sale BOOLEAN DEFAULT FALSE,
     start_date DATE,
     end_date DATE
+);
+-- =============================================================================== CART
+CREATE TABLE cart (
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    product_id INT REFERENCES products(id) ON DELETE CASCADE,
+    size_id INT REFERENCES sizes(id),
+    variant_id INT REFERENCES variants(id),
+    quantity INT NOT NULL CHECK (quantity > 0),
+    PRIMARY KEY (user_id, product_id, size_id, variant_id)
 );
 
 
