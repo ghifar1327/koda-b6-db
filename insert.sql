@@ -54,7 +54,7 @@
 -- (7,1),(7,2),(7,3),
 -- (8,1),(8,2),(8,3),
 -- (9,1),(9,2),(9,3);
-
+-- (10,1),(10,2),(10,3);
 -- INSERT INTO methods (name)
 -- VALUES
 -- ('Dine In'),
@@ -101,15 +101,22 @@
 -- ('Ice', 0),
 -- ('Less Sugar', 0),
 -- ('Extra Shot', 5000),
--- ('Oat Milk', 7000),
--- ('Caramel Syrup', 3000);
+-- ('spicy', 3000),
+-- ('tasty', 0);
 
 -- INSERT INTO product_variant VALUES
--- (1,4),(2,4),(3,4),(4,4),(5,4),(6,4),(7,4);
+-- (1,1),(1,2),(1,3),(1,4),
+-- (2,1),(2,2),(2,3),(2,4),
+-- (3,1),(3,2),(3,3),(3,4),
+-- (4,1),(4,2),(4,3),(4,4),
+-- (5,1),(5,2),(5,3),(5,4),
+-- (6,1),(6,2),(6,3),(6,4),
+-- (7,1),(7,2),(7,3),(7,4),
+-- (8,1),(8,2),(8,3),(8,4),
+-- (9,1),(9,2),(9,3),(9,4),
+-- (10,5),(10,6);
 
-
-
--- ============================================================================= INSERT TRANSACTION 
+-- -- ============================================================================= INSERT TRANSACTION 
 
 -- INSERT INTO cart (user_id, product_id, quantity)
 -- SELECT id, 3, 2 FROM users ORDER BY created_at LIMIT 1;
@@ -127,7 +134,7 @@
 -- SELECT id, 5, 1 FROM users ORDER BY created_at OFFSET 2 LIMIT 1;
 
 
--- no.1 
+-- -- no.1 
 
 -- INSERT INTO transactions (user_id, status, payment_method)
 -- SELECT id, 'paid', 'qris'
@@ -135,7 +142,7 @@
 -- ORDER BY created_at
 -- LIMIT 1;
 
--- no.2
+-- -- no.2
 
 -- INSERT INTO transactions (user_id, status, payment_method)
 -- SELECT id, 'pending', 'cash'
@@ -143,29 +150,29 @@
 -- ORDER BY created_at
 -- OFFSET 1 LIMIT 1;
 
--- no.3 
+-- -- no.3 
 
 -- INSERT INTO transactions (user_id, status, payment_method)
 -- SELECT id, 'paid', 'debit'
 -- FROM users
 -- ORDER BY created_at
 -- OFFSET 2 LIMIT 1;
--- =====================================================================================================
+-- -- =====================================================================================================
 
--- no.1
+-- -- no.1
 
 -- INSERT INTO transactions_products (transaction_id, product_id, size_id, quantity)
 -- VALUES
 -- (1, 3, 2, 2),
 -- (1, 10, 1, 3);
 
--- no. 2
+-- -- no. 2
 
 -- INSERT INTO transactions_products (transaction_id, product_id, size_id, quantity)
 -- VALUES
 -- (2, 4, 3, 1);
 
--- no. 3
+-- -- no. 3
 -- INSERT INTO transactions_products (transaction_id, product_id, size_id, quantity)
 -- VALUES
 -- (3, 7, 1, 2),
