@@ -7,7 +7,6 @@ CREATE TABLE users (
     password TEXT NOT NULL,
     phone VARCHAR(50),
     address TEXT,
-    role VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -61,7 +60,8 @@ CREATE TABLE methods (
 CREATE TABLE product_methods (
     product_id INT REFERENCES products(id) ON DELETE CASCADE,
     method_id INT REFERENCES methods(id) ON DELETE CASCADE,
-    PRIMARY KEY (product_id, method_id)
+    PRIMARY KEY (product_id, method_id),
+    add_price INT DEFAULT 0
 );
 
 -- ====================================================================================== SIZES
