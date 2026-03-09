@@ -1,3 +1,8 @@
+-- =================================================================================
+CREATE TABLE role (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255)
+);
 -- ============================================================================== USER
 CREATE TABLE users (
     id UUID PRIMARY KEY,
@@ -5,11 +10,13 @@ CREATE TABLE users (
     picture TEXT,
     email VARCHAR(255) UNIQUE NOT NULL,
     password TEXT NOT NULL,
+    role_id int REFERENCES role(id) NOT NULL,
     phone VARCHAR(50),
     address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 -- ============================================================================ PRODUCTS
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
@@ -21,22 +28,46 @@ CREATE TABLE products (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ==================================================================================== METHODS
+CREATE TABLE methods (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    add_price INT 
+);
 
+-- ==============================================================================  VOUCHER
+CREATE TABLE vouchers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(225),
+    discount FLOAT DEFAULT 0,
+    start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    end_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
 -- ============================================================================= TRANSACTIONS
 CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES users(id) ON DELETE SET NULL,
     status VARCHAR(100) NOT NULL,
+    id_methode INT REFERENCES methods(id),
     payment_method VARCHAR(100) NOT NULL,
+    id_voucher INT REFERENCES vouchers(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ============================================================================== ORDER HISTORY
-CREATE TABLE order_history (
+
+-- ====================================================================================== SIZES
+CREATE TABLE sizes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    add_price INT DEFAULT 0
+);
+-- ============================================================================== TRANSACTION DETAIL
+CREATE TABLE transaction_details (
     id SERIAL PRIMARY KEY,
     transaction_id INT REFERENCES transactions(id) ON DELETE CASCADE,
-    status VARCHAR(100) NOT NULL,
-    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    product_id INT REFERENCES products(id),
+    size_id INT REFERENCES sizes(id)
 );
 
 -- =============================================================================== CATEGORIES
@@ -51,31 +82,7 @@ CREATE TABLE products_categories (
     PRIMARY KEY (product_id, category_id)
 );
 
--- ==================================================================================== METHODS
-CREATE TABLE methods (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
 
-CREATE TABLE product_methods (
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
-    method_id INT REFERENCES methods(id) ON DELETE CASCADE,
-    PRIMARY KEY (product_id, method_id),
-    add_price INT DEFAULT 0
-);
-
--- ====================================================================================== SIZES
-CREATE TABLE sizes (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    add_price INT DEFAULT 0
-);
-
-CREATE TABLE product_sizes (
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
-    size_id INT REFERENCES sizes(id) ON DELETE CASCADE,
-    PRIMARY KEY (product_id, size_id)
-);
 
 -- ===================================================================================== VARIANT
 CREATE TABLE variants (
@@ -84,11 +91,6 @@ CREATE TABLE variants (
     add_price INT DEFAULT 0
 );
 
-CREATE TABLE product_variant (
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
-    variant_id INT REFERENCES variants(id) ON DELETE CASCADE,
-    PRIMARY KEY (product_id, variant_id)
-);
 
 -- ===================================================================================== IMAGES
 CREATE TABLE images (
@@ -102,20 +104,11 @@ CREATE TABLE product_images (
     PRIMARY KEY (product_id, image_id)
 );
 
--- ============================================================================= TRANSACTIONS_PRODUCTS
-CREATE TABLE transactions_products (
-    id SERIAL PRIMARY KEY,
-    transaction_id INT REFERENCES transactions(id) ON DELETE CASCADE,
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
-    size_id INT REFERENCES sizes(id),
-    quantity INT NOT NULL CHECK (quantity > 0)
-);
-
 -- =================================================================================== TESTIMONY
 CREATE TABLE testimony (
     id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
+    id_transaction_details INT REFERENCES products(id) ON DELETE CASCADE,
     rating DECIMAL(2,1) CHECK (rating BETWEEN 1 AND 5),
     message TEXT
 );
@@ -131,36 +124,26 @@ CREATE TABLE discount (
     start_date DATE,
     end_date DATE
 );
--- =============================================================================== CART
-CREATE TABLE cart (
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
-    size_id INT REFERENCES sizes(id),
-    variant_id INT REFERENCES variants(id),
-    quantity INT NOT NULL CHECK (quantity > 0),
-    PRIMARY KEY (user_id, product_id, size_id, variant_id)
-);
 
 
 SELECT * From users;
+SELECT * FROM role;
 SELECT * FROM products;
-SELECT * FROM cart;
+SELECT * FROM methods;
+SELECT * FROM vouchers;
 SELECT * FROM transactions;
-SELECT * FROM order_history;
+SELECT * FROM sizes;
+SELECT * FROM transaction_details;
 SELECT * FROM categories;
 SELECT * FROM products_categories;
-SELECT * FROM methods;
-SELECT * FROM product_methods;
-SELECT * FROM sizes;
-SELECT * FROM product_sizes;
 SELECT * FROM variants;
-SELECT * FROM product_variant;
 SELECT * FROM images;
 SELECT * FROM product_images;
-SELECT * FROM transactions_products;
 SELECT * FROM testimony;
 SELECT * FROM discount;
 
+
+-- DROP TABLE role cascade;
 -- drop TABLE users CASCADE;
 -- drop TABLE products CASCADE;
 -- drop TABLE cart CASCADE;
