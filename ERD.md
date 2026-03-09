@@ -3,10 +3,9 @@
 ```mermaid
 erDiagram
 
-
-    USER ||--O{ CART : has
-    USER ||--o{ TRANSACTIONS : makes
-    USER {
+    USERS ||--o{ROLE : has
+    USERS ||--o{ TRANSACTIONS : makes
+    USERS {
         string id pk 
         string full_name
         string picture
@@ -14,53 +13,41 @@ erDiagram
         string password
         string phone
         string addres 
-        string role
+        string role_id
         timestamp create_at
         timestamp update_at
     }
-
-    CART ||--O{ PRODUCTS : keep
-    CART{
-        int user_id FK
-        int product_id Fk
-        int size_id FK
-        int variant_id FK
-        int quantity
-
+    ROLE {
+        int id
+        string role
     }
 
-    TRANSACTIONS ||--o{ TRANSACTIONS_PRODUCTS : contains
-    TRANSACTIONS ||--o{ ORDER_HISTORY : has
+    
+    TRANSACTIONS ||--o{ METHODS : has
+    TRANSACTIONS ||--o{ TRANSACTIONS_DETAIL : contains
     TRANSACTIONS {
         int id PK
         int user_id FK
         string status
         string payment_method
+        int id_methode
         timestamp created_at
     }
 
-    TRANSACTIONS_PRODUCTS {
+    TRANSACTIONS_DETAIL {
         int id PK
         int transaction_id FK
         int product_id FK
         int size_id Fk
+        int variant_id Fk
         int quantity
     }
 
-    ORDER_HISTORY {
-        int id PK
-        int transaction_id FK
-        string status
-        timestamp changed_at
-    }
+
 
     PRODUCTS ||--O{ PRODUCTS_CATEGORIES : has
-    PRODUCTS ||--O{ TESTIMONY : has
-    PRODUCTS ||--o{ PRODUCT_VARIANT : has
-    PRODUCTS ||--o{ PRODUCT_SIZES : has
-    PRODUCTS ||--o{ TRANSACTIONS_PRODUCTS : ordered
+    PRODUCTS ||--o{ TRANSACTIONS_DETAIL : ordered
     PRODUCTS ||--o{ PRODUCT_IMAGES : has
-    PRODUCTS ||--o{ PRODUCT_METHODS : available_in
     PRODUCTS {
         int id pk
         string name
@@ -81,38 +68,25 @@ erDiagram
         int catagory_id FK
     }
 
-    METHODS  ||--o{ PRODUCT_METHODS : used_in
     METHODS {
         int id PK
         string name
-    }
-    PRODUCT_METHODS {
-        int product_id FK
-        int method_id FK
+        int add_price
     }
 
-    SIZES ||--o{ CART : has
-    SIZES ||--o{ PRODUCT_SIZES : avaliable_at
+    SIZES ||--o{ TRANSACTIONS_DETAIL : avaliable_in
     SIZES {
         int id PK
         string name 
         int add_price
     }
-    PRODUCT_SIZES{
-        int product_id FK
-        int size_id FK
-    }
 
-    VARIANT ||--o{ CART : has
-    VARIANT ||--O{ PRODUCT_VARIANT : available_in
+
+    VARIANT ||--O{ TRANSACTIONS_DETAIL : available_in
     VARIANT {
         int id PK
         string name
         int add_price
-    }
-    PRODUCT_VARIANT{
-        int product_id FK
-        int variant_id FK
     }
 
     IMAGES ||--o{ PRODUCT_IMAGES : available_in
@@ -124,10 +98,11 @@ erDiagram
         int product_id FK
         int image_id FK
     }
+    TRANSACTIONS_DETAIL ||--O| TESTIMONY : has
     TESTIMONY{
         int id PK
         string user_id FK
-        int id_product FK
+        int id_tansactions_detail FK
         desimal reting
         string message 
     }
@@ -136,10 +111,21 @@ erDiagram
     DISCOUNT {
         int id PK
         int product_id FK
-        decimal discount_persent
+        decimal discount_percent
         string description
         boolean is_Flash_sale
         date start_date
         date end_date
+    }
+
+    VOUCHER ||--O{TRANSACTIONS : has
+    VOUCHER {
+        int id pk
+        string name
+        double discount
+        boolean is_apply
+        date start_date
+        date end_date 
+        
     }
 ```
