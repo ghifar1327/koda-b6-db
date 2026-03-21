@@ -1,131 +1,170 @@
-# Coffee Shop ERD (ENTITY RELATIONSHIP DIAGRAM)
 
 ```mermaid
 erDiagram
 
-    USERS ||--o{ROLE : has
+    ROLES ||--o{ USERS : has
     USERS ||--o{ TRANSACTIONS : makes
+    USERS ||--o{ REVIEWS : writes
     USERS {
-        string id pk 
+        string id PK
         string full_name
         string picture
-        string  email
+        string email
         string password
         string phone
-        string addres 
-        string role_id
-        timestamp create_at
-        timestamp update_at
-    }
-    ROLE {
-        int id
-        string role
+        string address
+        int role_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
 
-    
-    TRANSACTIONS ||--o{ METHODS : has
-    TRANSACTIONS ||--o{ TRANSACTIONS_DETAIL : contains
+    ROLES {
+        int id PK
+        string role
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    METHODS ||--o{ TRANSACTIONS : used_in
+    VOUCHERS ||--o{ TRANSACTIONS : applied_to
+    TRANSACTIONS ||--o{ TRANSACTION_DETAILS : contains
     TRANSACTIONS {
         int id PK
-        int user_id FK
+        string user_id FK
+        int method_id FK
+        int voucher_id FK
         string status
-        string payment_method
-        int id_methode
+        int total_price
         timestamp created_at
+        timestamp updated_at
     }
 
-    TRANSACTIONS_DETAIL {
+    PRODUCTS ||--o{ TRANSACTION_DETAILS : ordered_in
+    SIZES ||--o{ TRANSACTION_DETAILS : available_in
+    VARIANTS ||--o{ TRANSACTION_DETAILS : available_in
+    TRANSACTION_DETAILS ||--o| REVIEWS : has
+    TRANSACTION_DETAILS {
         int id PK
         int transaction_id FK
         int product_id FK
-        int size_id Fk
-        int variant_id Fk
+        int size_id FK
+        int variant_id FK
         int quantity
+        int subtotal
     }
 
-
-
-    PRODUCTS ||--O{ PRODUCTS_CATEGORIES : has
-    PRODUCTS ||--o{ TRANSACTIONS_DETAIL : ordered
+    PRODUCTS ||--o{ PRODUCT_CATEGORIES : has
     PRODUCTS ||--o{ PRODUCT_IMAGES : has
+    PRODUCTS ||--o{ DISCOUNTS : has
     PRODUCTS {
-        int id pk
+        int id PK
         string name
         string description
         int price
         int stock
-        timestapm create_at
-        timestapm update_at
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
 
-    CATEGORIES ||--o{ PRODUCTS_CATEGORIES : has
+    CATEGORIES ||--o{ PRODUCT_CATEGORIES : has
     CATEGORIES {
         int id PK
         string name
+        timestamp created_at
+        timestamp updated_at
     }
-    PRODUCTS_CATEGORIES{
+
+    PRODUCT_CATEGORIES {
+        int id PK
         int product_id FK
-        int catagory_id FK
+        int category_id FK
     }
 
     METHODS {
         int id PK
         string name
         int add_price
+        timestamp created_at
+        timestamp updated_at
     }
 
-    SIZES ||--o{ TRANSACTIONS_DETAIL : avaliable_in
     SIZES {
-        int id PK
-        string name 
-        int add_price
-    }
-
-
-    VARIANT ||--O{ TRANSACTIONS_DETAIL : available_in
-    VARIANT {
         int id PK
         string name
         int add_price
+        timestamp created_at
+        timestamp updated_at
     }
 
-    IMAGES ||--o{ PRODUCT_IMAGES : available_in
-    IMAGES{
+    VARIANTS {
         int id PK
-        int url
+        string name
+        int add_price
+        timestamp created_at
+        timestamp updated_at
     }
-    PRODUCT_IMAGES{
+
+    IMAGES ||--o{ PRODUCT_IMAGES : used_in
+    IMAGES {
+        int id PK
+        string url
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PRODUCT_IMAGES {
+        int id PK
         int product_id FK
         int image_id FK
     }
-    TRANSACTIONS_DETAIL ||--O| TESTIMONY : has
-    TESTIMONY{
+
+    REVIEWS {
         int id PK
         string user_id FK
-        int id_tansactions_detail FK
-        desimal reting
-        string message 
+        int transaction_detail_id FK
+        decimal rating
+        string message
+        timestamp created_at
+        timestamp updated_at
     }
 
-    DISCOUNT ||--O{ PRODUCTS : available
-    DISCOUNT {
+    DISCOUNTS {
         int id PK
         int product_id FK
         decimal discount_percent
         string description
-        boolean is_Flash_sale
+        boolean is_flash_sale
         date start_date
         date end_date
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
 
-    VOUCHER ||--O{TRANSACTIONS : has
-    VOUCHER {
-        int id pk
+    VOUCHERS {
+        int id PK
         string name
-        double discount
-        boolean is_apply
+        decimal discount
+        boolean is_active
         date start_date
-        date end_date 
-        
+        date end_date
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+    PRODUCTS ||--o{ PRODUCT_SIZES : has
+    SIZES ||--o{ PRODUCT_SIZES : has
+    PRODUCT_SIZES {
+        int product_id fk
+        int size_id fk
+    }
+
+    PRODUCTS ||--o{ PRODUCT_VARIANTS : has
+    VARIANTS ||--o{ PRODUCT_VARIANTS : has
+    PRODUCT_VARIANTS {
+        int product_id fk
+        int variant_id fk
     }
 ```
